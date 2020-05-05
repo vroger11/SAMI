@@ -75,7 +75,7 @@ def prepare_source(res_all):
     return res_plot, patients
 
 
-def main(folder_out="results", seg_size=16000):
+def main(folder_out="c2si_results", seg_size=16000):
     """
     Parameters
     ----------
