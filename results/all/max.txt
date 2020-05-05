@@ -1,0 +1,46 @@
+max results
+
+All participants results
+Correlation std_score/intel:
+spearmanr 0.8129
+Correlation mean_score/intel:
+spearmanr 0.8352
+Correlation median_score/intel:
+spearmanr 0.776
+Correlation min_score/intel:
+spearmanr 0.7252
+Correlation max_score/intel:
+spearmanr -0.4651
+Correlation std_score/severity:
+spearmanr 0.8386
+Correlation mean_score/severity:
+spearmanr 0.8603
+Correlation median_score/severity:
+spearmanr 0.8078
+Correlation min_score/severity:
+spearmanr 0.7488
+Correlation max_score/severity:
+spearmanr -0.4798
+
+Patients only results:
+Correlation std_score/intel:
+spearmanr 0.7815
+Correlation mean_score/intel:
+spearmanr 0.7898
+Correlation median_score/intel:
+spearmanr 0.7247
+Correlation min_score/intel:
+spearmanr 0.7147
+Correlation max_score/intel:
+spearmanr -0.3246
+Correlation std_score/severity:
+spearmanr 0.8067
+Correlation mean_score/severity:
+spearmanr 0.8124
+Correlation median_score/severity:
+spearmanr 0.7501
+Correlation min_score/severity:
+spearmanr 0.7318
+Correlation max_score/severity:
+spearmanr -0.3202
+
