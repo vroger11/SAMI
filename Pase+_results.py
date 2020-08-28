@@ -1,4 +1,5 @@
 """Module to do Pase+ experiments."""
+import argparse
 import sys
 from os.path import join
 from pathlib import Path
@@ -10,7 +11,7 @@ import numpy as np
 from scipy.stats import spearmanr
 
 from tools.pase_score import pase_score
-from tools.c2si_data import get_c2si_dataloader
+from tools.c2si_data import get_c2si_dataloader, C2SI_FOLDERPATH
 from tools.plots import plot_results
 
 PASE_FOLDER = join(str(Path.home()), 'git/pase+')
@@ -75,7 +76,7 @@ def prepare_source(res_all):
     return res_plot, patients
 
 
-def main(folder_out="c2si_results", seg_size=16000):
+def main(folder_out="c2si_results", seg_size=16000, parameters='trained_model/PASE+_parameters.ckpt', folder_in=C2SI_FOLDERPATH):
     """
     Parameters
     ----------
@@ -84,11 +85,15 @@ def main(folder_out="c2si_results", seg_size=16000):
 
     seg_size: int, optional
         Number of samples to take, here for the C2SI corpus 16000 samples correspond to 1s
+
+    parameters: str, optional
+        Filepath to the pase+ parameters
+
     """
     # load model
-    pase = load_pase_plus()
+    pase = load_pase_plus(parameters=parameters)
     # load data
-    all_dataloader, c2si_gt = get_c2si_dataloader("all", seg_size=seg_size, overlap=0., normalize_audio=True, vad=[0.2, 0.5, 5])
+    all_dataloader, c2si_gt = get_c2si_dataloader("all", seg_size=seg_size, overlap=0., normalize_audio=True, vad=[0.2, 0.5, 5], c2si_folderpath=folder_in)
 
     # Compute results
     feature_preparations = [None, "l1", "l2", "max", "inf", "zscore"]
@@ -135,4 +140,16 @@ def main(folder_out="c2si_results", seg_size=16000):
             result_file.close()
 
 if __name__ == '__main__':
-    main()
+    PARSER = argparse.ArgumentParser()
+    PARSER.add_argument("folder_out", type=str, help="Folder where the results will be put.")
+    PARSER.add_argument("-s", "--seg_size", type=int, default=16000,
+                        help="Size of segment used (in number of samples).")
+    PARSER.add_argument("-p", "--pase_plus_parameters", type=str,
+                        default='trained_model/PASE+_parameters.ckpt',
+                        help="Filepath to the parameters to use.")
+    PARSER.add_argument("-d", "--data", type=str,
+                        default=C2SI_FOLDERPATH,
+                        help="C2SI folder path.")
+    ARGS = PARSER.parse_args()
+
+    main(ARGS.folder_out, ARGS.seg_size, ARGS.pase_plus_parameters, ARGS.data)
