@@ -4,8 +4,8 @@ from pathlib import Path
 
 from audio_loader.features.raw_audio import WindowedAudio
 from audio_loader.ground_truth.c2si import C2SI
-from audio_loader.samplers.windowed import WindowedSampler
-from audio_loader.dl_frontends.pytorch.fill_ram import get_pytorch_dataloader_fill_ram
+from audio_loader.samplers.windowed_segments import WindowedSegmentSampler
+from audio_loader.dl_frontends.pytorch.fill_ram import get_dataloader_fixed_size
 from audio_loader.activity_detection.simple_VAD import Simple
 
 
@@ -59,7 +59,7 @@ def get_c2si_dataloader(group="all", seg_size=4000, overlap=0., c2si_folderpath=
 
     raw_feature_processor = WindowedAudio(win_size, hop_size, 16000,
                                           normalize=normalize_audio, padding=padding)
-    raw_sampler = WindowedSampler([raw_feature_processor], c2si_gt, seg_size,
-                                  overlap=overlap, output_filepath=True, activity_detection=vad)
+    raw_sampler = WindowedSegmentSampler([raw_feature_processor], c2si_gt, seg_size,
+                                          overlap=overlap, output_filepath=True, activity_detection=vad)
 
-    return get_pytorch_dataloader_fill_ram(raw_sampler, 16, "test"), c2si_gt
+    return get_dataloader_fixed_size(raw_sampler, 16, "test"), c2si_gt
