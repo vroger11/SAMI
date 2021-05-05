@@ -2,11 +2,12 @@ import itertools
 import torch
 import torch.nn.functional as F
 import numpy as np
+import pickle
 
 from tools.functional import PreProcess
 
 
-def pase_score(model, dataloader, al_gt, norm="l1", norm_approach="all", device="cpu"):
+def pase_score(model, dataloader, al_gt, norm="l1", norm_approach="all", device="cpu", save_controls_parameters=True):
     """Inspired from the inception score.
 
     Parameters
@@ -55,6 +56,11 @@ def pase_score(model, dataloader, al_gt, norm="l1", norm_approach="all", device=
                     p_yx_controls.append(p_yx)
 
             featureProcess.fit(torch.cat(p_yx_controls))
+
+            if save_controls_parameters:
+                fileobject = open(f"controls_featureProcess_{norm}.pickle", 'wb')
+                pickle.dump(featureProcess, fileobject)
+                fileobject.close()
 
         # group by participants (one audio recording file is viewed as a participatant)
         # and compute KL divergence
