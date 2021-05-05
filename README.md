@@ -6,7 +6,7 @@ Launching the `Pase+_results.py` file launch the experiments over the [C2SI corp
 All resulting experiments on this corpus can be found in `results` folder.
 There you will find 3 subfolders (`all`, `controls` and `files`) corresponding to normalization using all features (`all`), using only controls features (`controls`) and using only the processed file (`file`).
 All computations to the KL divergence are done in `tools/pase_score.py` module, the rest is in `Pase+_results.py`.
-This work is under submission process for the interspeech2020 conference.
+This work is under submission process for the ICASSP2021 conference.
 The original parameters learned by [Ravanelli et al. 2020](https://arxiv.org/abs/2001.09239) over 50h of the LibriSpeech dataset for the Pase+ model is under the `trained_model/PASE+_parameters.ckpt` file.
 
 
