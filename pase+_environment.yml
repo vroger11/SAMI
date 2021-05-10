@@ -177,7 +177,6 @@ dependencies:
     - pynvim==0.4.1
     - pynvrtc==8.0
     - pysptk==0.1.16
-    - pytorch-qrnn==0.2.1
     - sklearn==0.0
     - webrtcvad==2.0.10
 prefix: /home/vincent/.miniconda3/envs/pase+
