@@ -168,6 +168,7 @@ dependencies:
   - pip:
     - git+https://github.com/santi-pdp/ahoproc_tools.git
     - git+https://github.com/detly/gammatone
+    - git+https://github.com/salesforce/pytorch-qrnn
     - git+https://github.com/pswietojanski/kaldi-io-for-python.git
     - cupy-cuda101==7.1.1
     - fastrlock==0.4

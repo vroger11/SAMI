@@ -130,12 +130,12 @@ def main(filepath, seg_size=16000, parameters='trained_model/PASE+_parameters.ck
     # compute final score
     score = kl_d.mean().cpu().numpy()
 
-    print(f"score: {score}")
+    print(f"score: {score:3.0f}")
 
 if __name__ == '__main__':
     PARSER = argparse.ArgumentParser()
     PARSER.add_argument("-f", "--filepath", type=str,
-                        help="File path to test.")
+                        help="File path to test.", required=True)
     PARSER.add_argument("-s", "--seg_size", type=int, default=16000,
                         help="Size of segment used (in number of samples).")
     PARSER.add_argument("-p", "--pase_plus_parameters", type=str,
