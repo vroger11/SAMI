@@ -15,9 +15,6 @@ from audio_loader.dl_frontends.pytorch.fill_ram import get_dataloader_fixed_size
 from audio_loader.activity_detection.simple_VAD import Simple
 
 
-PASE_FOLDER = join(str(Path.home()), 'git/pase+')
-sys.path.append(PASE_FOLDER)
-from pase.models.frontend import wf_builder
 
 
 CUDA0 = torch.device('cuda:0')
@@ -26,7 +23,11 @@ SCORES = ["std_score", "mean_score", "median_score", "min_score", "max_score"]
 
 
 # Load model
-def load_pase_plus(pase_folder=PASE_FOLDER, parameters='trained_model/PASE+_parameters.ckpt'):
+def load_pase_plus(PASE_FOLDER, parameters='trained_model/PASE+_parameters.ckpt'):
+
+    sys.path.append(PASE_FOLDER)
+    from pase.models.frontend import wf_builder
+    
     pase = wf_builder(join(PASE_FOLDER, 'cfg/frontend/PASE+.cfg'))
     pase.eval()
     pase.load_pretrained(parameters, load_last=True, verbose=True)
@@ -103,12 +104,15 @@ def compute_pase_score(model, filepath, featureProcess, sampler, device="cpu"):
         return KL_d
 
 
-def main(filepath, seg_size=16000, parameters='trained_model/PASE+_parameters.ckpt'):
+def main(filepath, pasePath, seg_size=16000, parameters='trained_model/PASE+_parameters.ckpt' ):
     """
     Parameters
     ----------
-    folder_out: str, optional
-        Folder containing the results of the experiment.
+    filePath: str
+        File in input of experiment
+        
+    pasePath: str
+        Path to the path library
 
     seg_size: int, optional
         Number of samples to take, here for the C2SI corpus 16000 samples correspond to 1s
@@ -118,7 +122,7 @@ def main(filepath, seg_size=16000, parameters='trained_model/PASE+_parameters.ck
 
     """
     # load model
-    pase = load_pase_plus(parameters=parameters)
+    pase = load_pase_plus(pasePath, parameters=parameters)
     # load data
     sampler = extract_data(filepath)
 
@@ -136,6 +140,9 @@ if __name__ == '__main__':
     PARSER = argparse.ArgumentParser()
     PARSER.add_argument("-f", "--filepath", type=str,
                         help="File path to test.", required=True)
+    PARSER.add_argument("-l", "--pase_path", type=str,
+                        help="File path to pase library.",
+                        default=join(str(Path.home()), 'git/pase+'))
     PARSER.add_argument("-s", "--seg_size", type=int, default=16000,
                         help="Size of segment used (in number of samples).")
     PARSER.add_argument("-p", "--pase_plus_parameters", type=str,
@@ -143,4 +150,4 @@ if __name__ == '__main__':
                         help="Filepath to the parameters to use.")
     ARGS = PARSER.parse_args()
 
-    main(ARGS.filepath, ARGS.seg_size, ARGS.pase_plus_parameters)
+    main(ARGS.filepath, ARGS.pase_path, ARGS.seg_size, ARGS.pase_plus_parameters)
