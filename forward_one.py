@@ -130,7 +130,7 @@ def main(filepath, seg_size=16000, parameters='trained_model/PASE+_parameters.ck
     # compute final score
     score = kl_d.mean().cpu().numpy()
 
-    print(f"score: {score:3.0f}")
+    print(f"score: {score:1.2e}")
 
 if __name__ == '__main__':
     PARSER = argparse.ArgumentParser()
