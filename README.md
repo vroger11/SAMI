@@ -1,4 +1,4 @@
-# SAMI project
+# SAMI project test
 
 Automatic System to Measure Speech Intelligibility (SAMI in French).
 It is a blind unsupervised system designed to be close to the intelligibility of production and to the severity index of speech disorder measures.
