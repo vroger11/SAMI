@@ -28,7 +28,7 @@ def details_by_filepath(kl_score, c2si_gt):
     for fp in kl_score:
         res[fp] = {}
         res[fp]["kl_d"] = kl_score[fp]
-        selected_row = c2si_gt.df_selected[c2si_gt.df_selected["relative path"] == fp.replace(".wav", "")]
+        selected_row = c2si_gt.df_selected[c2si_gt.df_selected["relative path"] == c2si_gt.get_id(fp)]
         res[fp]["intel"] = selected_row["intel"].values[0]
         res[fp]["severity"] = selected_row["sev"].values[0]
         res[fp]["group"] = selected_row["group"].values[0]

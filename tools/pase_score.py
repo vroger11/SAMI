@@ -51,7 +51,7 @@ def pase_score(model, dataloader, al_gt, norm="l1", norm_approach="all", device=
             fp_unique = np.unique(filepaths)
             for fp in fp_unique:
                 p_yx = torch.cat([p_yx_all[i] for i in range(len(filepaths)) if filepaths[i] == fp])
-                selected_row = al_gt.df_selected[al_gt.df_selected["relative path"] == fp.replace(".wav", "")]
+                selected_row = al_gt.df_selected[al_gt.df_selected["relative path"] == al_gt.get_id(fp)]
                 if selected_row["group"].values[0] == 2:
                     p_yx_controls.append(p_yx)
 
