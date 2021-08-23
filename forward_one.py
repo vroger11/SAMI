@@ -1,7 +1,7 @@
 """Module to do Pase+ experiments."""
 import argparse
-import sys
 import pickle
+import sys
 from os.path import join
 from pathlib import Path
 
@@ -27,7 +27,7 @@ def load_pase_plus(PASE_FOLDER, parameters='trained_model/PASE+_parameters.ckpt'
 
     sys.path.append(PASE_FOLDER)
     from pase.models.frontend import wf_builder
-    
+
     pase = wf_builder(join(PASE_FOLDER, 'cfg/frontend/PASE+.cfg'))
     pase.eval()
     pase.load_pretrained(parameters, load_last=True, verbose=True)
@@ -110,7 +110,7 @@ def main(filepath, pasePath, seg_size=16000, parameters='trained_model/PASE+_par
     ----------
     filePath: str
         File in input of experiment
-        
+
     pasePath: str
         Path to the path library
 
@@ -134,7 +134,14 @@ def main(filepath, pasePath, seg_size=16000, parameters='trained_model/PASE+_par
     # compute final score
     score = kl_d.mean().cpu().numpy()
 
+    # load regression model
+    with open('regression_model.pkl', 'rb') as fid:
+        regression_model = pickle.load(fid)
+
+    data = np.array(score).reshape((-1, 1))
+    target_predicted = np.clip(regression_model.predict(np.array(data)), 0, 10)
     print(f"score: {score:1.2e}")
+    print(f"severity predicted: {target_predicted}")
 
 if __name__ == '__main__':
     PARSER = argparse.ArgumentParser()

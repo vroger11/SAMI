@@ -1,12 +1,19 @@
 """Module to do Pase+ experiments."""
 import argparse
 import sys
+
+from bokeh.models import transforms
 from os.path import join
 from pathlib import Path
 from math import e as euler_number
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
+from sklearn.pipeline import make_pipeline
+from sklearn.kernel_approximation import Nystroem
 
 import torch
 import numpy as np
+import pickle
 
 from scipy.stats import spearmanr
 
@@ -76,7 +83,7 @@ def prepare_source(res_all):
     return res_plot, patients
 
 
-def main(folder_out="c2si_results", seg_size=16000, parameters='trained_model/PASE+_parameters.ckpt', folder_in=C2SI_FOLDERPATH):
+def main(folder_out="c2si_results", seg_size=16000, parameters='trained_model/PASE+_parameters.ckpt', folder_in=C2SI_FOLDERPATH, transformation=False):
     """
     Parameters
     ----------
@@ -98,6 +105,7 @@ def main(folder_out="c2si_results", seg_size=16000, parameters='trained_model/PA
     # Compute results
     feature_preparations = [None, "l1", "l2", "max", "inf", "zscore"]
     feature_prep_strats = ["all", "file", "controls"]
+    best_result = None
     for feature_prep_strat in feature_prep_strats:
         folder_result = join(folder_out, feature_prep_strat)
         for feature_preparation in feature_preparations:
@@ -110,6 +118,9 @@ def main(folder_out="c2si_results", seg_size=16000, parameters='trained_model/PA
             res_all = details_by_filepath(kl_d, c2si_gt)
 
             res_plot, patients = prepare_source(res_all)
+            if feature_prep_strat == "controls" and feature_preparation == "max":
+                best_result = res_plot
+
             # Bokeh plots
             metrics = ["intel", "severity"]
             for y_axis in metrics:
@@ -139,6 +150,25 @@ def main(folder_out="c2si_results", seg_size=16000, parameters='trained_model/PA
             result_file.write("\n")
             result_file.close()
 
+    if transforms:
+        print("Save tranformation of the score into severity score")
+        data = best_result["mean_score"]
+        data = np.array(data).reshape((-1, 1))
+        target = np.array(best_result["severity"])
+
+        nystroem_regression = make_pipeline(
+            Nystroem(n_components=5), LinearRegression(),
+        )
+        nystroem_regression.fit(data, target)
+        target_predicted = np.clip(nystroem_regression.predict(data), 0, 10)
+        mse = mean_squared_error(target, target_predicted)
+        print(f"Achieved MSE: {mse}")
+
+        # save the classifier
+        with open('regression_model.pkl', 'wb') as fid:
+            pickle.dump(nystroem_regression, fid)
+
+
 if __name__ == '__main__':
     PARSER = argparse.ArgumentParser()
     PARSER.add_argument("folder_out", type=str, help="Folder where the results will be put.")
@@ -150,6 +180,9 @@ if __name__ == '__main__':
     PARSER.add_argument("-d", "--data", type=str,
                         default=C2SI_FOLDERPATH,
                         help="C2SI folder path.")
+    PARSER.add_argument("-t", "--transformation",
+                        action="store_true",
+                        help="Compute transformation function of model score into severity score.")
     ARGS = PARSER.parse_args()
 
-    main(ARGS.folder_out, ARGS.seg_size, ARGS.pase_plus_parameters, ARGS.data)
+    main(ARGS.folder_out, ARGS.seg_size, ARGS.pase_plus_parameters, ARGS.data, ARGS.transformation)
