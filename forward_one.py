@@ -104,7 +104,7 @@ def compute_pase_score(model, filepath, featureProcess, sampler, device="cpu"):
         return KL_d
 
 
-def main(filepath, pasePath, seg_size=16000, parameters='trained_model/PASE+_parameters.ckpt' ):
+def main(filepath, pasePath, seg_size=16000, parameters='trained_model/PASE+_parameters.ckpt', regression_fp="regression_model.pkl"):
     """
     Parameters
     ----------
@@ -135,7 +135,7 @@ def main(filepath, pasePath, seg_size=16000, parameters='trained_model/PASE+_par
     score = kl_d.mean().cpu().numpy()
 
     # load regression model
-    with open('regression_model.pkl', 'rb') as fid:
+    with open(regression_fp, 'rb') as fid:
         regression_model = pickle.load(fid)
 
     data = np.array(score).reshape((-1, 1))
@@ -160,4 +160,4 @@ if __name__ == '__main__':
                         help="Filepath to the transformation model to use.")
     ARGS = PARSER.parse_args()
 
-    main(ARGS.filepath, ARGS.pase_path, ARGS.seg_size, ARGS.pase_plus_parameters)
+    main(ARGS.filepath, ARGS.pase_path, ARGS.seg_size, ARGS.pase_plus_parameters, ARGS.transformation_model)
