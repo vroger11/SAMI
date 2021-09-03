@@ -155,6 +155,9 @@ if __name__ == '__main__':
     PARSER.add_argument("-p", "--pase_plus_parameters", type=str,
                         default='trained_model/PASE+_parameters.ckpt',
                         help="Filepath to the parameters to use.")
+    PARSER.add_argument("-tm", "--transformation_model", type=str,
+                        default='regression_model.pkl',
+                        help="Filepath to the transformation model to use.")
     ARGS = PARSER.parse_args()
 
     main(ARGS.filepath, ARGS.pase_path, ARGS.seg_size, ARGS.pase_plus_parameters)
