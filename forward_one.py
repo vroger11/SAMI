@@ -2,6 +2,8 @@
 import argparse
 import pickle
 import sys
+
+from math import e as euler_number
 from os.path import join
 from pathlib import Path
 
@@ -132,7 +134,7 @@ def main(filepath, pasePath, seg_size=16000, parameters='trained_model/PASE+_par
     kl_d = compute_pase_score(pase, filepath, feature_process, sampler, device=CUDA0)
 
     # compute final score
-    score = kl_d.mean().cpu().numpy()
+    score = float(torch.pow(euler_number, kl_d.mean()).cpu().numpy())
 
     # load regression model
     with open(regression_fp, 'rb') as fid:
@@ -140,7 +142,7 @@ def main(filepath, pasePath, seg_size=16000, parameters='trained_model/PASE+_par
 
     data = np.array(score).reshape((-1, 1))
     target_predicted = np.clip(regression_model.predict(np.array(data)), 0, 10)
-    print(f"score: {score:1.2e}")
+    print(f"score: {score}")
     print(f"severity predicted: {target_predicted}")
 
 if __name__ == '__main__':
