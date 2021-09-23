@@ -157,14 +157,14 @@ dependencies:
   - webencodings=0.5.1=py_1
   - wheel=0.34.2=py38_0
   - wrapt=1.11.2=py38h7b6447c_0
-  - x264=1!152.20180806=h14c3975_0
-  - xlrd=1.2.0=py_0
-  - xz=5.2.4=h14c3975_4
-  - yaml=0.1.7=had09818_2
-  - zeromq=4.3.2=he1b5a44_2
-  - zipp=3.0.0=py_0
-  - zlib=1.2.11=h7b6447c_3
-  - zstd=1.3.7=h0b5b093_0
+  - x264=1!152.20180806
+  - xlrd=1.2.0
+  - xz=5.2.4
+  - yaml=0.1.7
+  - zeromq=4.3.2
+  - zipp=3.0.0
+  - zlib=1.2.11
+  - zstd=1.3.7
   - pip:
     - git+https://github.com/santi-pdp/ahoproc_tools.git
     - git+https://github.com/detly/gammatone
