@@ -83,7 +83,7 @@ def prepare_source(res_all):
     return res_plot, patients
 
 
-def main(folder_out="c2si_results", seg_size=16000, parameters='trained_model/PASE+_parameters.ckpt', folder_in=C2SI_FOLDERPATH, transformation=False):
+def main(folder_out="c2si_results", seg_size=16000, parameters='trained_model/PASE+_parameters.ckpt', folder_in=C2SI_FOLDERPATH, transform=False):
     """
     Parameters
     ----------
@@ -150,7 +150,7 @@ def main(folder_out="c2si_results", seg_size=16000, parameters='trained_model/PA
             result_file.write("\n")
             result_file.close()
 
-    if transforms:
+    if transform:
         print("Save tranformation of the score into severity score")
         data = best_result["mean_score"]
         data = np.array(data).reshape((-1, 1))
